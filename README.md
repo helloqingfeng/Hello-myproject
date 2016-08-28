@@ -29,15 +29,13 @@ https://helloqingfeng.github.io/Hello-myproject/0624-Boostrap-002/index.html
 ## 0628-fun-colllection
 https://helloqingfeng.github.io/Hello-myproject/0628-fun-colllection/0520-Happy%20love%20you%20forever.html
 
-
-
 ## 0704-FullPage.js全屏滚动插件实践案例
 Apple watch宣传页面效果
 https://helloqingfeng.github.io/Hello-myproject/0704-fullPage-appleWatch/index.html
 
 ## 0706-jQuery Mobile实践案例
 列车时刻查询表web app
-https://helloqingfeng.github.io/Hello-myproject/0706-JQueryMobile-%E5%88%97%E8%BD%A6%E6%97%B6%E5%88%BB%E6%9F%A5%E8%AF%A2%E8%A1%A8/index.html
+https://helloqingfeng.github.io/Hello-myproject/0706-jQuery-Mobile-列车时刻查询表/index.html
 
 ## 0712-三种方式实现下拉菜单
 #### JavaScript实现下拉菜单
