@@ -10,7 +10,7 @@
 			position: relative;
 			text-align:center;
 			margin: 0 auto;
-			height: 768px; 
+			height: 768px;
 			width: 1366px;
 			background-image: url(http://img.mukewang.com/52da5e7d0001c0f813660768.jpg);
 		}
@@ -43,12 +43,12 @@
 			height: 42px;
 			width: 37px;
 			background: #0c8484 url(https://www.bing.com/s/a/hpc18.png) no-repeat;
-			border: 0px solid #0c8484;			
+			border: 0px solid #0c8484;
 			background-position: -169px -58px;
 			overflow: hidden;
-			vertical-align: center;			    
+			vertical-align: center;
 		}
-		.search-box{			
+		.search-box{
 			position: absolute;
 			top:38%;
 			left:30%;
@@ -63,7 +63,7 @@
 			list-style: none;
 			margin: 0;
 			padding: 0;
-		}		
+		}
 		#suggest ul li{
 			font-size:20px;
 			height: 38px;
@@ -72,7 +72,7 @@
 		}
 		#suggest ul li:hover{
 			background-color: gray;
-			text-decoration: none;			
+			text-decoration: none;
 		}
 	</style>
 </head>
@@ -90,9 +90,9 @@
 		<ul id="search-result">
 			<li>搜索结果001</li>
 			<li>搜索结果001</li>
-		</ul>		
+		</ul>
 	</div>
-	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="js/jquery-2.2.3.min.js"></script>
 	<script type="text/javascript">
 	$(".search-input").bind('keyup click',function(){
 		var serachText=$("#search-input").val();
@@ -110,10 +110,10 @@
 			top:$(".search-input").offset().top+$(".search-input").height()+2,
 			left:$(".search-input").offset().left
 		});
-		
+
 		},'json');
 	})
-		
+
 	</script>
 </body>
 </html>
