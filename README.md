@@ -3,7 +3,7 @@
 
 ## 前端学习过程中，进行的部分代码练习。
 
-博客首页：http://helloqingfeng.github.io/index.html (注：暂无内容)
+博客首页：https://helloqingfeng.github.io/index.html (注：暂无内容)
 
 ## 0517-企业管理系统后台（Bootstrap）
 https://helloqingfeng.github.io/Hello-myproject/0517-企业管理系统后台（Bootstrap）/index.html
