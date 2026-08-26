@@ -40,12 +40,12 @@ async function getCards(ext) {
         if (!href || seen.has(href)) return
         if (href.startsWith('/play/') || href.startsWith('/s/') || href === '/') return
 
-        let idMatch = href.match(//(w+)/(d+).htm/)
+        let idMatch = href.match(/\/(\w+)\/(\d+)\.htm/)
         if (!idMatch) return
 
         let title = $(el).attr('title') || ''
         let shortTitle = title
-        let titleMatch = title.match(/《(.+?)》/)
+        let titleMatch = title.match(/\u300a(.+?)\u300b/)
         if (titleMatch) {
             shortTitle = titleMatch[1]
         }
@@ -81,7 +81,7 @@ async function getCards(ext) {
     })
 
     if (nextPage) {
-        let nextNum = nextPage.match(//(d+).htm/)?.[1] || ''
+        let nextNum = nextPage.match(/\/(\d+)\.htm/)?.[1] || ''
         if (nextNum) {
             items.push({
                 id: 'nextpage',
@@ -92,6 +92,188 @@ async function getCards(ext) {
             })
         }
     }
+
+    return jsonify(items)
+}
+
+async function getDetail(ext) {
+    ext = argsify(ext)
+    let url = ext.url || ''
+    if (!url) {
+        return jsonify({ id: '', title: '', img: '', desc: '', playLinks: [] })
+    }
+
+    let html = await $fetch.get(url, {
+        headers: { 'User-Agent': UA }
+    })
+    let $ = cheerio.load(html.data)
+
+    let detail = {
+        id: ext.id || url.match(/\/(\w+)\/(\d+)\.htm/)?.[2] || '',
+        title: '',
+        img: '',
+        desc: '',
+        playLinks: [],
+    }
+
+    detail.title = $('h1').first().text().trim() ||
+                   $('.detail-title').first().text().trim() ||
+                   $('title').text().replace(/\s*[-|].*$/, '').trim()
+
+    detail.img = $('.detail-poster img, .detail-info img, .vod-img-item img').first().attr('src') || ''
+    detail.desc = $('.detail-desc p, .detail-info .desc, .vod-info').first().text().trim()
+
+    let playLinks = []
+    $('a[href*="/play/"]').each(function(i, el) {
+        let href = $(el).attr('href') || ''
+        let name = $(el).text().trim()
+        if (href && name) {
+            playLinks.push({
+                name: name,
+                url: appConfig.site + href,
+            })
+        }
+    })
+
+    detail.playLinks = playLinks
+    return jsonify(detail)
+}
+
+async function getTracks(ext) {
+    ext = argsify(ext)
+    let url = ext.url || ''
+    if (!url) {
+        return jsonify([])
+    }
+
+    let tracks = []
+
+    if (url.match(/\/(\w+)\/\d+\.htm/) && !url.includes('/play/')) {
+        let html = await $fetch.get(url, {
+            headers: { 'User-Agent': UA }
+        })
+        let $ = cheerio.load(html.data)
+
+        $('a[href*="/play/"]').each(function(i, el) {
+            let href = $(el).attr('href') || ''
+            let name = $(el).text().trim()
+            if (href && name) {
+                tracks.push({
+                    name: name,
+                    pan: '',
+                    ext: { url: appConfig.site + href },
+                })
+            }
+        })
+    } else if (url.includes('/play/')) {
+        let html = await $fetch.get(url, {
+            headers: { 'User-Agent': UA }
+        })
+        let $ = cheerio.load(html.data)
+
+        $('a.play-item, a.play-btn, a[href*="/play/"]').each(function(i, el) {
+            let href = $(el).attr('href') || ''
+            let name = $(el).text().trim()
+            if (href && name && !tracks.some(function(t) { return t.ext.url === appConfig.site + href })) {
+                tracks.push({
+                    name: name,
+                    pan: '',
+                    ext: { url: appConfig.site + href },
+                })
+            }
+        })
+    }
+
+    return jsonify({
+        list: [{ title: '选集', tracks }],
+    })
+}
+
+async function getPlayinfo(ext) {
+    ext = argsify(ext)
+    let url = ext.url || ''
+
+    if (!url) {
+        return jsonify({ playUrl: '' })
+    }
+
+    if (url.includes('.m3u8') || url.includes('.mp4')) {
+        return jsonify({ playUrl: url })
+    }
+
+    let html = await $fetch.get(url, {
+        headers: { 'User-Agent': UA }
+    })
+
+    let playUrl = ''
+
+    let m3u8Match = html.data.match(/https?:\/\/[^\s"'<>]+\.m3u8[^\s"'<>]*/i)
+    if (m3u8Match) {
+        playUrl = m3u8Match[0]
+    }
+
+    if (!playUrl) {
+        let mp4Match = html.data.match(/https?:\/\/[^\s"'<>]+\.mp4[^\s"'<>]*/i)
+        if (mp4Match) {
+            playUrl = mp4Match[0]
+        }
+    }
+
+    if (!playUrl) {
+        playUrl = url
+    }
+
+    return jsonify({ playUrl: playUrl })
+}
+
+async function search(ext) {
+    ext = argsify(ext)
+    let wd = ext.wd || ext.keyword || ''
+    if (!wd) {
+        return jsonify([])
+    }
+
+    let url = appConfig.site + '/s/all?type=' + encodeURIComponent(wd)
+
+    let html = await $fetch.get(url, {
+        headers: { 'User-Agent': UA }
+    })
+    let $ = cheerio.load(html.data)
+    let items = []
+
+    $('a[href$=".htm"]').each(function(i, el) {
+        let href = $(el).attr('href') || ''
+        if (!href || href.startsWith('/play/') || href.startsWith('/s/') || href === '/') return
+
+        let idMatch = href.match(/\/(\w+)\/(\d+)\.htm/)
+        if (!idMatch) return
+
+        let title = $(el).attr('title') || ''
+        let shortTitle = title
+        let titleMatch = title.match(/\u300a(.+?)\u300b/)
+        if (titleMatch) {
+            shortTitle = titleMatch[1]
+        }
+        if (!shortTitle) {
+            shortTitle = $(el).find('h4, h3').first().text().trim()
+        }
+        if (!shortTitle) {
+            let parent = $(el).closest('.card, .module-item, [class*="card"]')
+            shortTitle = parent.find('h4, h3').first().text().trim()
+        }
+        if (!shortTitle) return
+
+        let img = $(el).find('img').first().attr('data-src') || $(el).find('img').first().attr('src') || ''
+        let badge = $(el).find('span').first().text().trim()
+
+        items.push({
+            id: idMatch[2],
+            title: shortTitle,
+            img: img,
+            remark: badge,
+            ext: { url: appConfig.site + href },
+        })
+    })
 
     return jsonify(items)
 }
