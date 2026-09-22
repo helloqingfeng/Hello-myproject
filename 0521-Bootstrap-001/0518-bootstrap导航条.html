@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <title>0518——bootstrap导航条</title>
+    <style type="text/css">
+        body{
+           padding-top: 70px;
+           padding-bottom: 50px;
+       }
+
+       .carousel{
+           height: 500px;
+           background-color: #000;
+       }
+
+       .carousel .item{
+           height: 500px;
+           background-color: #000;
+       }
+
+       .carousel-caption{
+           font-size: 16px;
+           line-height: 20px;
+           margin-bottom: 50px;
+
+       }
+
+       .carousel-caption h1{
+           color: red;
+       }
+
+       .carousel-caption p , blockquote{
+           color: black;
+           font-weight: bold;
+       }
+
+       .row{
+           margin: 0px;
+           padding: 10px;
+       }
+
+   </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">企业管理系统</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">首页<span class="sr-only">(current)</span></a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">功能<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+             <li class="dropdown-header">业务功能</li>
+             <li><a href="#">信息建立</a></li>
+             <li><a href="#">信息查询</a></li>
+             <li><a href="#">信息管理</a></li>
+             <li role="separator" class="divider"></li>
+             <li class="dropdown-header">系统功能</li>
+             <li><a href="#">设置</a></li>
+         </ul>
+     </li>
+     <li><a href="#">帮助</a></li>
+ </ul>
+
+ <form class="navbar-form navbar-left" role="signup">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="用户名...">
+      <input type="password" class="form-control" placeholder="密码..."></input>
+  </div>
+  <button type="submit" class="btn btn-primary">登录</button>
+</form>
+
+</div><!-- /.navbar-collapse -->
+</div><!-- /.container-fluid -->
+</nav>
+
+<!--轮播图片-->
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+</ol>
+
+<!-- Wrapper for slides -->
+<div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <img src="img/hai001.jpg" alt="清风" width="1366px">
+      <div class="carousel-caption">
+          <h1>韩娱明星</h1>
+          <p><blockquote> 秋天，无论在什么地方的秋天，总是好的；可是啊，北国的秋，却特别    地来得清，来得静，来得悲凉。我的不远千里，要从杭州赶上青岛，更要从青岛赶上北平来的理由，也不过想饱尝一尝这"秋"，这故都的秋味。</blockquote> </p>
+          <p>江南，秋当然也是有的；但草木雕得慢，空气来得润，天的颜色显得淡，并且又时常多雨而少风；一个人夹在苏州上海杭州，或厦门香港广州的市民中间，浑沌沌地过去，只能感到一点点清凉，秋的味，秋的色，秋的意境与姿态，总看不饱，尝不透，赏玩不到十足。秋并不是名花，也并不是美酒，那一种半开，半醉的状态，在领略秋的过程上，是不合适的。 </p>
+          <p><a class="btn btn-primary" href="#" role="button">点我下载</a></p>
+      </div>
+  </div>
+
+  <div class="item">
+      <img src="img/hai002.jpg" alt="清风" width="1366px">
+      <div class="carousel-caption">
+          <h1>清风明月</h1>
+          <p><blockquote> 秋天，无论在什么地方的秋天，总是好的；可是啊，北国的秋，却特别    地来得清，来得静，来得悲凉。我的不远千里，要从杭州赶上青岛，更要从青岛赶上北平来的理由，也不过想饱尝一尝这"秋"，这故都的秋味。</blockquote> </p>
+          <p>江南，秋当然也是有的；但草木雕得慢，空气来得润，天的颜色显得淡，并且又时常多雨而少风；一个人夹在苏州上海杭州，或厦门香港广州的市民中间，浑沌沌地过去，只能感到一点点清凉，秋的味，秋的色，秋的意境与姿态，总看不饱，尝不透，赏玩不到十足。秋并不是名花，也并不是美酒，那一种半开，半醉的状态，在领略秋的过程上，是不合适的。 </p>
+          <p><a class="btn btn-primary" href="#" role="button">点我下载</a></p>
+      </div>
+  </div>
+
+  <div class="item">
+      <img src="img/hai003.jpg" alt="清风" width="1366px">
+      <div class="carousel-caption">
+       <h1>清风明月</h1>
+       <p><blockquote> 秋天，无论在什么地方的秋天，总是好的；可是啊，北国的秋，却特别    地来得清，来得静，来得悲凉。我的不远千里，要从杭州赶上青岛，更要从青岛赶上北平来的理由，也不过想饱尝一尝这"秋"，这故都的秋味。</blockquote> </p>
+       <p><a class="btn btn-primary" href="#" role="button">点我下载</a></p>
+   </div>
+</div>
+
+<div class="item">
+  <img src="img/hai004.jpg" alt="清风" width="1366px">
+  <div class="carousel-caption">
+   <h1>清风明月</h1>
+   <p><blockquote> 秋天，无论在什么地方的秋天，总是好的；可是啊，北国的秋，却特别    地来得清，来得静，来得悲凉。我的不远千里，要从杭州赶上青岛，更要从青岛赶上北平来的理由，也不过想饱尝一尝这"秋"，这故都的秋味。</blockquote> </p>
+   <p><a class="btn btn-primary" href="#" role="button">点我下载</a></p>
+</div>
+</div>
+</div>
+
+<!-- Controls -->
+<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">上页</span>
+</a>
+<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">下页</span>
+</a>
+</div>
+
+<div class="container">
+    <div class="row">
+       <div class="col-md-4">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+       <div class="col-md-4">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+       <div class="col-md-4">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+   </div>
+   <div class="row">
+      <div class="col-md-4">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+      <div class="col-md-4 col-md-offset-4">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-3 col-md-offset-3">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+      <div class="col-md-3 col-md-offset-3">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-6 col-md-offset-3">慕课网是一家从事互联网免费教学的网络教育公司。秉承"开拓、创新、公平、分享"的精神，将互联网特性全面的应用在教育领域，致力于为教育机构及求学者打造一站式互动在线教育品牌。</div>
+  </div>
+  <hr>
+</div>
+
+<div class="container">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist" id="mytab">
+    <li role="presentation" class="active"><a href="#tab-chrome" aria-controls="tab-chrome" role="tab" data-toggle="tab">Chrome</a></li>
+    <li role="presentation"><a href="#tab-safari" aria-controls="tab-safari" role="tab" data-toggle="tab">Safari</a></li>
+    <li role="presentation"><a href="#tab-firefox" aria-controls="tab-firefox" role="tab" data-toggle="tab">Firefox</a></li>
+    <li role="presentation"><a href="#tab-opera" aria-controls="tab-opera" role="tab" data-toggle="tab">Opera</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="tab-chrome">
+        <p>Google Chrome是一款快速、简单且安全的网络浏览器,能很好地满足新型网站对浏览器的要求。</p>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab-safari">
+        <div class="row">
+            <div class="col-md-7">
+               <p>基于Bootstrap实现下图所示效果的页面，一个标签页，页面载入完毕后，默认打开第二个标签</p>
+           </div>
+        </div>
+   </div>
+   <div role="tabpanel" class="tab-pane" id="tab-firefox">
+       <p>Firefox火狐浏览器,全新升级—快速、安全、免费、开源,让您轻松控制网络,全球5亿用户都在用!马上在Windows、Mac、Linux、Android和iOS上使用火狐浏览器吧!
+       </p>
+   </div>
+   <div role="tabpanel" class="tab-pane" id="tab-opera">
+       <p>通过欧朋官方下载网站,您可以免费、快速、安全地下载欧朋浏览器、欧朋流量宝等高质量的手机必备软件。全球最流行的手机浏览器!</p></div>
+   </div>
+
+</div>
+
+
+<script src="js/jquery-2.2.3.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function(){
+  $('#mytab li:eq(1) a').tab('show');
+		//$('#myTabs a:last').tab('show') // Select last tab
+	});
+</script>
+</body>
+</html>
