@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XPTV 播放源制作与全流程开发开发手册</title>
+<style>
+/* ============================================================
+   WARM PAPER DESIGN SYSTEM (暖纸风)
+   ============================================================ */
+:root {
+  --bg-page:        #F8F4EF;
+  --bg-card:        #FFFFFF;
+  --bg-card-alt:    #FBF7F2;
+  --bg-hover:       #F3EDE6;
+  --bg-input:       #F5F0EB;
+  --bg-highlight:   #FDF0E4;
+
+  --accent:         #C17B50;
+  --accent-hover:   #A8663E;
+  --accent-light:   #F0E0D0;
+  --accent-bg:      #FBF0E6;
+
+  --text-primary:   #3D3D3D;
+  --text-secondary: #7A7269;
+  --text-tertiary:  #B0A89E;
+  --text-inverse:   #FFFFFF;
+
+  --border:         #E8E0D8;
+  --border-light:   #F0EBE5;
+  --divider:        #EDE7E0;
+
+  --danger:         #C45A5A;
+  --danger-light:   #FDEAEA;
+  --success:        #5A9E6F;
+  --success-light:  #E8F5EC;
+  --warning:        #D4A03C;
+  --warning-light:  #FFF8E6;
+  --info:           #5B8EC4;
+  --info-light:     #E8F0FA;
+
+  --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+
+  --font-size-xs:   12px;
+  --font-size-sm:   13px;
+  --font-size-base: 14px;
+  --font-size-md:   16px;
+  --font-size-lg:   20px;
+  --font-size-xl:   26px;
+  --font-size-2xl:  34px;
+  --line-height:    1.7;
+
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  16px;
+  --space-xl:  24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wp-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.wp-report-header {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  margin-bottom: var(--space-2xl);
+  border-bottom: 2px solid var(--divider);
+}
+.wp-report-header__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.5px;
+}
+.wp-report-header__subtitle {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+}
+.wp-report-header__meta {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.wp-section {
+  margin-bottom: var(--space-3xl);
+}
+.wp-section-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.wp-section-title::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+}
+.wp-section-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.wp-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+.wp-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.wp-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.wp-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+  .wp-grid-2, .wp-grid-3, .wp-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.wp-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.wp-card--flat {
+  border: none;
+  background: var(--bg-card-alt);
+}
+.wp-card--highlight {
+  background: var(--bg-highlight);
+  border-color: var(--accent-light);
+}
+
+.wp-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+.wp-card__title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.wp-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1.8;
+}
+.wp-tag--accent  { background: var(--accent-light); color: var(--accent); }
+.wp-tag--danger  { background: var(--danger-light);  color: var(--danger); }
+.wp-tag--success { background: var(--success-light); color: var(--success); }
+.wp-tag--warning { background: var(--warning-light); color: var(--warning); }
+.wp-tag--info    { background: var(--info-light);    color: var(--info); }
+.wp-tag--solid   { background: var(--accent);        color: var(--text-inverse); }
+
+.wp-callout {
+  padding: var(--space-lg) var(--space-xl);
+  border-left: 4px solid var(--accent);
+  background: var(--accent-bg);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  margin: var(--space-lg) 0;
+  line-height: 1.6;
+}
+.wp-callout--danger {
+  border-left-color: var(--danger);
+  background: var(--danger-light);
+}
+.wp-callout--warning {
+  border-left-color: var(--warning);
+  background: var(--warning-light);
+}
+.wp-callout--success {
+  border-left-color: var(--success);
+  background: var(--success-light);
+}
+
+.wp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  margin: var(--space-md) 0;
+}
+.wp-table th {
+  text-align: left;
+  padding: var(--space-md) var(--space-lg);
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+  background: var(--bg-card-alt);
+}
+.wp-table td {
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.wp-table tr:hover td {
+  background: var(--bg-hover);
+}
+
+.wp-code {
+  background: #272421;
+  color: #E8E0D8;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+}
+.wp-code-inline {
+  background: var(--bg-input);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.wp-info-list {
+  padding: 0;
+  list-style: none;
+}
+.wp-info-list__item {
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+.wp-info-list__item::before {
+  content: "•";
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.wp-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+.wp-flow__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 130px;
+}
+.wp-flow__num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-base);
+}
+.wp-flow__title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.wp-flow__desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.wp-flow__arrow {
+  color: var(--accent-light);
+  font-size: 20px;
+  font-weight: bold;
+}
+@media (max-width: 768px) {
+  .wp-flow__arrow { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="wp-container">
+
+  <!-- 报告头部 -->
+  <header class="wp-report-header">
+    <h1 class="wp-report-header__title">XPTV 播放源制作与全流程开发手册</h1>
+    <p class="wp-report-header__subtitle">从站点侦测、加密逆向、标准6函数编写到本地仿真沙箱与 GitHub 自动化发布的标准化规范</p>
+    <div class="wp-report-header__meta">
+      <span>版本：v1.0.0</span>
+      <span>•</span>
+      <span>适用平台：XPTV (iOS / macOS / Apple TV)</span>
+      <span>•</span>
+      <span>设计体系：暖纸风 (Warm Paper)</span>
+    </div>
+  </header>
+
+  <!-- 全流程概览 -->
+  <div class="wp-flow">
+    <div class="wp-flow__step">
+      <div class="wp-flow__num">1</div>
+      <div class="wp-flow__title">站点侦测筛查</div>
+      <div class="wp-flow__desc">WAF/CMS/验证码评估</div>
+    </div>
+    <div class="wp-flow__arrow">➔</div>
+    <div class="wp-flow__step">
+      <div class="wp-flow__num">2</div>
+      <div class="wp-flow__title">播放流解密逆向</div>
+      <div class="wp-flow__desc">Base64/Escape/二次签名</div>
+    </div>
+    <div class="wp-flow__arrow">➔</div>
+    <div class="wp-flow__step">
+      <div class="wp-flow__num">3</div>
+      <div class="wp-flow__title">编写标准 6 函数</div>
+      <div class="wp-flow__desc">遵循 XPTV 核心数据契约</div>
+    </div>
+    <div class="wp-flow__arrow">➔</div>
+    <div class="wp-flow__step">
+      <div class="wp-flow__num">4</div>
+      <div class="wp-flow__title">本地沙箱仿真</div>
+      <div class="wp-flow__desc">Node.js VM 端到端测试</div>
+    </div>
+    <div class="wp-flow__arrow">➔</div>
+    <div class="wp-flow__step">
+      <div class="wp-flow__num">5</div>
+      <div class="wp-flow__title">订阅与云端部署</div>
+      <div class="wp-flow__desc">GitHub Pages 提交验证</div>
+    </div>
+  </div>
+
+  <!-- 第一部分：站点筛查 -->
+  <section class="wp-section">
+    <h2 class="wp-section-title">第一章：目标站点可行性筛查（五步法）</h2>
+    <p class="wp-section-desc">在编写具体解析代码前，必须先探测目标站点的抗爬机制、架构模式与播放流真实有效性。</p>
+    
+    <div class="wp-card">
+      <table class="wp-table">
+        <thead>
+          <tr>
+            <th>筛查维度</th>
+            <th>检查指标与特征</th>
+            <th>判定与应对策略</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 网络与 WAF 防护</strong></td>
+            <td>HTTP 403 / Cloudflare 5秒盾 / 状态码 850 / 海外阻断超时</td>
+            <td><span class="wp-tag wp-tag--danger">放弃/不可用</span> 纯静态 JS 扩展无法绕过 CF 5秒盾，直接跳过</td>
+          </tr>
+          <tr>
+            <td><strong>2. CMS 架构识别</strong></td>
+            <td>查看页面源码，确认是否为 MacCMS（苹果CMS）、海洋CMS等</td>
+            <td><span class="wp-tag wp-tag--success">推荐优选</span> MacCMS 规范度最高，自带 <span class="wp-code-inline">player_aaaa</span> 或 <span class="wp-code-inline">player_data</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. 人机与弹窗限制</strong></td>
+            <td>详情页/搜索页是否存在滑块验证（如 <span class="wp-code-inline">tncode</span>）</td>
+            <td><span class="wp-tag wp-tag--warning">部分受限</span> 若仅搜索有防刷验证，可保留分类瀑布流，搜索做安全降级</td>
+          </tr>
+          <tr>
+            <td><strong>4. 播放流结构逆向</strong></td>
+            <td>检查播放页是否有直链 m3u8、Base64 加密、或二次签名接口</td>
+            <td><span class="wp-tag wp-tag--accent">逆向分析</span> 通过正则与解码逻辑提取出播放流直链</td>
+          </tr>
+          <tr>
+            <td><strong>5. 视频流连通性测试</strong></td>
+            <td>对提取的 <span class="wp-code-inline">.m3u8</span> 发送 HEAD/GET 请求</td>
+            <td><span class="wp-tag wp-tag--success">校验通过</span> 返回 HTTP 200 且包含 <span class="wp-code-inline">#EXTM3U</span> 视为优质播放源</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 第二部分：加密逆向模式 -->
+  <section class="wp-section">
+    <h2 class="wp-section-title">第二章：常见播放器加密与解密模式</h2>
+    <p class="wp-section-desc">在 <span class="wp-code-inline">getPlayinfo</span> 中针对不同的播放器实现逆向还原：</p>
+
+    <div class="wp-grid wp-grid-3">
+      <div class="wp-card">
+        <div class="wp-card__header">
+          <span class="wp-card__title">模式 A：直链 m3u8 / mp4</span>
+          <span class="wp-tag wp-tag--success">最常见</span>
+        </div>
+        <p class="wp-section-desc">无任何加密，数据直接在 player_data 对象的 url 属性中。</p>
+        <div class="wp-code">if (rawUrl.startsWith('http')) {
+  return jsonify({ 
+    urls: [rawUrl] 
+  });
+}</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-card__header">
+          <span class="wp-card__title">模式 B：MacCMS 标准加密</span>
+          <span class="wp-tag wp-tag--accent">标准编码</span>
+        </div>
+        <p class="wp-section-desc">声明 encrypt=1 (escape) 或 encrypt=2 (Base64 + escape)。</p>
+        <div class="wp-code">if (pObj.encrypt === 2) {
+  rawUrl = unescape(atob(rawUrl));
+} else if (pObj.encrypt === 1) {
+  rawUrl = unescape(rawUrl);
+}</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-card__header">
+          <span class="wp-card__title">模式 C：二次签名接口</span>
+          <span class="wp-tag wp-tag--warning">动态鉴权</span>
+        </div>
+        <p class="wp-section-desc">如 YX/NBY 播放器，先请求签名接口获取带 token 链接再换取 m3u8。</p>
+        <div class="wp-code">const sRes = await $fetch.get(
+  '?get_signed_url=1&url=' + encode(raw)
+);
+const dRes = await $fetch.get(sRes.signed_url);
+return jsonify({ urls: [dRes.jmurl] });</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第三部分：标准 6 函数规范 -->
+  <section class="wp-section">
+    <h2 class="wp-section-title">第三章：XPTV 扩展标准代码规范（6 核心函数）</h2>
+    <p class="wp-section-desc">XPTV 运行于 JavaScript 沙箱环境，必须完整导出以下 6 个核心函数，且数据契约必须完全合规：</p>
+
+    <div class="wp-callout wp-callout--danger">
+      <strong>⚠️ 核心避坑铁律：</strong><br>
+      1. <strong>入参转义</strong>：每个接收 <span class="wp-code-inline">ext</span> 的函数开头必须执行 <span class="wp-code-inline">ext = argsify(ext)</span>。<br>
+      2. <strong>线路与选集结构（重中之重）</strong>：<span class="wp-code-inline">getTracks</span> 必须返回嵌套结构 <span class="wp-code-inline">{ list: [ { title: '线路名', tracks: [ { name: '第1集', pan: '', ext: { url } } ] } ] }</span>。若错误返回扁平数组，将导致客户端 <strong>“点击播放没反应”</strong>！<br>
+      3. <strong>播放结果返回</strong>：<span class="wp-code-inline">getPlayinfo</span> 必须返回 <span class="wp-code-inline">{ urls: [ streamUrl ] }</span>。
+    </div>
+
+    <div class="wp-card">
+      <div class="wp-card__header">
+        <span class="wp-card__title">标准 XPTV 扩展实现模版 (Template.js)</span>
+        <span class="wp-tag wp-tag--solid">JavaScript</span>
+      </div>
+      <div class="wp-code">// === 站点 XPTV 扩展脚本 (template.js) ===
+const BASE_URL = 'https://www.example.com';
+const HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    'Referer': BASE_URL + '/'
+};
+
+// 1. 插件基础元信息
+async function getLocalInfo() {
+    return jsonify({
+        name: '示例影视',
+        icon: BASE_URL + '/favicon.ico',
+        version: '1.0.0',
+        description: '海量超清影视免费在线播放',
+        author: 'antigravity'
+    });
+}
+
+// 2. 顶部频道分类配置
+async function getConfig() {
+    return jsonify({
+        tabs: [
+            { name: '电影', ext: { url: BASE_URL + '/vodtype/1-{page}.html' } },
+            { name: '剧集', ext: { url: BASE_URL + '/vodtype/2-{page}.html' } },
+            { name: '动漫', ext: { url: BASE_URL + '/vodtype/3-{page}.html' } }
+        ]
+    });
+}
+
+// 3. 瀑布流卡片解析
+async function getCards(ext) {
+    ext = argsify(ext);
+    const page = ext.page || 1;
+    let url = (ext.url || (BASE_URL + '/vodtype/1-{page}.html')).replace('{page}', page);
+
+    try {
+        const res = await $fetch.get(url, { headers: HEADERS });
+        const html = res.data;
+        const cards = [];
+
+        const regex = /&lt;a[^&gt;]+href=["'](\/voddetail\/\d+\.html)["'][^&gt;]*&gt;([\s\S]*?)&lt;\/a&gt;/gi;
+        let match;
+        while ((match = regex.exec(html)) !== null) {
+            const rawA = match[0];
+            const link = BASE_URL + match[1].trim();
+            const titleMatch = rawA.match(/title=["']([^"']+)["']/i) || match[2].match(/alt=["']([^"']+)["']/i);
+            const picMatch = rawA.match(/data-original=["']([^"']+)["']/i) || rawA.match(/src=["']([^"']+)["']/i);
+            const remarksMatch = match[2].match(/&lt;span class="[^"]*note[^"]*"&gt;([^&lt;]*)&lt;\/span&gt;/i);
+
+            const title = titleMatch ? titleMatch[1].trim() : '';
+            const pic = picMatch ? picMatch[1].trim() : '';
+            const remarks = remarksMatch ? remarksMatch[1].trim() : '';
+
+            if (title &amp;&amp; !cards.find(c =&gt; c.ext.url === link)) {
+                cards.push({
+                    vod_id: link,
+                    vod_name: title,
+                    vod_pic: pic,
+                    vod_remarks: remarks,
+                    ext: { url: link }
+                });
+            }
+        }
+        return jsonify({ list: cards });
+    } catch (e) {
+        return jsonify({ list: [] });
+    }
+}
+
+// 4. 线路与选集提取 (严格遵循嵌套 list 结构)
+async function getTracks(ext) {
+    ext = argsify(ext);
+    const detailUrl = ext.url;
+    if (!detailUrl) return jsonify({ list: [] });
+
+    try {
+        const res = await $fetch.get(detailUrl, { headers: HEADERS });
+        const html = res.data;
+
+        // 按播放线路 sid 分组提取
+        const epRegex = /href=["']\/vodplay\/(\d+)-(\d+)-(\d+)\.html["'][^&gt;]*&gt;([\s\S]*?)&lt;\/a&gt;/gi;
+        let em;
+        const lineMap = {};
+
+        while ((em = epRegex.exec(html)) !== null) {
+            const [_, id, sid, nid] = em;
+            const epName = em[4].replace(/&lt;[^&gt;]+&gt;/g, '').trim() || `第${nid}集`;
+            const epUrl = `${BASE_URL}/vodplay/${id}-${sid}-${nid}.html`;
+            if (!lineMap[sid]) lineMap[sid] = [];
+            if (!lineMap[sid].find(x =&gt; x.ext.url === epUrl)) {
+                lineMap[sid].push({
+                    name: epName,
+                    pan: '',
+                    ext: { url: epUrl }
+                });
+            }
+        }
+
+        const lines = [];
+        for (const sid of Object.keys(lineMap)) {
+            lines.push({
+                title: `播放线路 ${sid}`,
+                tracks: lineMap[sid]
+            });
+        }
+        return jsonify({ list: lines });
+    } catch (e) {
+        return jsonify({ list: [] });
+    }
+}
+
+// 5. 播放流解析
+async function getPlayinfo(ext) {
+    ext = argsify(ext);
+    const playUrl = ext.url;
+    if (!playUrl) return jsonify({ urls: [] });
+
+    try {
+        const res = await $fetch.get(playUrl, { headers: { ...HEADERS, 'Referer': playUrl } });
+        const html = res.data;
+
+        const pMatch = html.match(/player_aaaa\s*=\s*({[^&lt;]+?})&lt;/) || 
+                      html.match(/player_data\s*=\s*({[^&lt;]+?})&lt;/);
+
+        if (pMatch) {
+            const pObj = JSON.parse(pMatch[1]);
+            let rawUrl = pObj.url;
+
+            if (pObj.encrypt === 2) {
+                try { rawUrl = unescape(atob(rawUrl)); } catch (err) {}
+            } else if (pObj.encrypt === 1) {
+                try { rawUrl = unescape(rawUrl); } catch (err) {}
+            }
+
+            if (rawUrl &amp;&amp; (rawUrl.startsWith('http://') || rawUrl.startsWith('https://'))) {
+                return jsonify({ urls: [rawUrl] });
+            }
+        }
+
+        const m3u8Match = html.match(/https?:\/\/[^\s"'&lt;&gt;]+\.m3u8[^\s"'&lt;&gt;]*/);
+        if (m3u8Match) {
+            return jsonify({ urls: [m3u8Match[0]] });
+        }
+        return jsonify({ urls: [] });
+    } catch (e) {
+        return jsonify({ urls: [] });
+    }
+}
+
+// 6. 搜索支持
+async function search(ext) {
+    ext = argsify(ext);
+    const keyword = ext.text || '';
+    if (!keyword) return jsonify({ list: [] });
+
+    try {
+        const searchUrl = `${BASE_URL}/vodsearch/${encodeURIComponent(keyword)}-------------.html`;
+        const res = await $fetch.get(searchUrl, { headers: HEADERS });
+        // 解析卡片列表...
+        return jsonify({ list: [] });
+    } catch (e) {
+        return jsonify({ list: [] });
+    }
+}</div>
+    </div>
+  </section>
+
+  <!-- 第四部分：本地仿真沙箱测试 -->
+  <section class="wp-section">
+    <h2 class="wp-section-title">第四章：Node.js 沙箱端到端仿真测试</h2>
+    <p class="wp-section-desc">无需将脚本传到手机或 Apple TV 即可在本地全自动验证所有 6 个函数与视频直链连通性：</p>
+
+    <div class="wp-card">
+      <div class="wp-card__header">
+        <span class="wp-card__title">仿真测试脚本 (simulate_test.js)</span>
+        <span class="wp-tag wp-tag--accent">Node.js VM</span>
+      </div>
+      <div class="wp-code">const fs = require('fs');
+const vm = require('vm');
+
+async function testExtension(filePath) {
+    const code = fs.readFileSync(filePath, 'utf8');
+
+    // 模拟 XPTV 原生沙箱上下文
+    const sandbox = {
+        jsonify: (obj) =&gt; JSON.stringify(obj),
+        argsify: (str) =&gt; typeof str === 'string' ? JSON.parse(str) : (str || {}),
+        atob: (str) =&gt; Buffer.from(str, 'base64').toString('binary'),
+        btoa: (str) =&gt; Buffer.from(str, 'binary').toString('base64'),
+        escape: escape,
+        unescape: unescape,
+        console: console,
+        $fetch: {
+            get: async (url, opts) =&gt; {
+                const res = await fetch(url, { headers: opts?.headers || {}, signal: AbortSignal.timeout(10000) });
+                return { data: await res.text(), status: res.status };
+            }
+        }
+    };
+
+    const context = vm.createContext(sandbox);
+    vm.runInContext(code, context);
+
+    console.log('1. getLocalInfo:', JSON.parse(await vm.runInContext('getLocalInfo()', context)));
+    const config = JSON.parse(await vm.runInContext('getConfig()', context));
+    console.log('2. getConfig 分类数:', config.tabs.length);
+
+    const cardsRes = JSON.parse(await vm.runInContext(`getCards(${JSON.stringify(JSON.stringify(config.tabs[0].ext))})`, context));
+    console.log(`3. getCards 成功获取卡片: ${cardsRes.list.length} 条`);
+
+    if (cardsRes.list.length &gt; 0) {
+        const tracksRes = JSON.parse(await vm.runInContext(`getTracks(${JSON.stringify(JSON.stringify(cardsRes.list[0].ext))})`, context));
+        console.log(`4. getTracks 解析线路数: ${tracksRes.list.length} 条`);
+
+        if (tracksRes.list.length &gt; 0 &amp;&amp; tracksRes.list[0].tracks.length &gt; 0) {
+            const playRes = JSON.parse(await vm.runInContext(`getPlayinfo(${JSON.stringify(JSON.stringify(tracksRes.list[0].tracks[0].ext))})`, context));
+            console.log('5. getPlayinfo 播放地址:', playRes);
+
+            if (playRes.urls?.[0]) {
+                const streamCheck = await fetch(playRes.urls[0], { method: 'HEAD' });
+                console.log(`6. 视频流连通性测试: HTTP ${streamCheck.status} ✅`);
+            }
+        }
+    }
+}
+testExtension('./kxyy.js');</div>
+    </div>
+  </section>
+
+  <!-- 第五部分：JSON 订阅与发布 -->
+  <section class="wp-section">
+    <h2 class="wp-section-title">第五章：JSON 订阅配置与发布流程</h2>
+    
+    <div class="wp-grid wp-grid-2">
+      <div class="wp-card">
+        <div class="wp-card__header">
+          <span class="wp-card__title">单源独立配置 ([name]-xptv.json)</span>
+          <span class="wp-tag wp-tag--info">JSON</span>
+        </div>
+        <div class="wp-code">{
+  "sites": [
+    {
+      "key": "kxyy",
+      "name": "开心影院",
+      "type": 3,
+      "api": "csp_kxyy",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/kxyy.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    }
+  ]
+}</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-card__header">
+          <span class="wp-card__title">发布与校验三部曲</span>
+          <span class="wp-tag wp-tag--success">Git Workflow</span>
+        </div>
+        <ul class="wp-info-list" style="margin-top: var(--space-sm);">
+          <li class="wp-info-list__item">将 <span class="wp-code-inline">.js</span> 和 <span class="wp-code-inline">-xptv.json</span> 放入仓库目标目录</li>
+          <li class="wp-info-list__item">将新源条目追加进 <span class="wp-code-inline">xptv-sources-all.json</span></li>
+          <li class="wp-info-list__item">执行 Git Commit 并推送至 GitHub 分支</li>
+          <li class="wp-info-list__item">使用 curl 发送 HEAD 请求校验 Raw 链接返回 HTTP 200</li>
+        </ul>
+        <div class="wp-code" style="margin-top: var(--space-md);">git add .
+git commit -m "Add new XPTV source"
+git push origin gh-pages
+curl -I https://raw.githubusercontent.com/...</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

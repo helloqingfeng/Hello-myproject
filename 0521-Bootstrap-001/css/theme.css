@@ -1,0 +1,60 @@
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0 none;
+    outline:0;
+    font:100%/1.5 Helvetica;
+    vertical-align:baseline;
+    background:transparent;
+}
+body {
+    line-height:1;
+}
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+    display:block;
+}
+.hide-txt {text-indent:-999em;#text-indent:0;line-height:999em;overflow:hidden;}
+.cf:before,
+.cf:after {content:".";display:block;height:0;visibility:hidden;}
+.cf:after {clear:both;}
+.cf {zoom:1;}
+
+body {font:14px/1.5 tahoma;color:#333;}
+a,a:visited {text-decoration:none;color:#05c}
+a:hover {text-decoration:underline;}
+h1,h2,h3,h4,h5,h6 {font-size:100%;padding:0;margin:.5em 0;font-family: Helvetica,
+Microsoft Yahei,Microsoft Sans Serif, sans;}
+h1 {font:28px/1.5   Helvetica,Microsoft Yahei,
+Microsoft Yahei, sans}
+h2 {font-size:20px;color: green;}
+h3 {font-size:16px;color: green;}
+h4 {font-size:14px}
+ul {padding:0 0 0 30px;margin:0}
+ul ul ul {list-style-type:disc}
+.content {padding:0 20px}
+.content p{text-indent:2em}
+
+table {border-collapse:collapse;width:100%}
+table th {background:#ccc}
+table td,table th {border:1px solid #333;height:24px}
+table td {text-align:center;padding:0 4px}
+table td.tdLeft,tfoot td{text-align:left}
+tfoot td {height:18px;background:#eee}
+
+header {border-bottom:1px solid #e5e5e5;}
+header h1 {margin:0;padding:20px 10px;}
+section {display:-webkit-box;display:-moz-box;-webkit-box-direction:reverse;-moz-box-direction:reverse;}
+article {-webkit-box-flex:1;-moz-box-flex:1;padding:20px 40px;line-height:1.8;}
+aside {width:220px;border-right:1px solid #e5e5e5;padding:10px;background:#f8f8f8;}
+footer {font:10px/1.5 verdana;-webkit-font-size-adjust:none;padding:15px 10px;border-top:1px solid #e5e5e5;color:#999;}

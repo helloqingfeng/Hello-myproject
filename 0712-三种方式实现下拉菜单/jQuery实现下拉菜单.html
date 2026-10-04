@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>jQuery实现下拉菜单</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style type="text/css">
+    *{ margin:0px; padding:0px;}
+    #menu{ background-color:#eee; width:600px; height:40px; margin:0 auto;}
+    ul{ list-style:none;}
+    ul li{
+      float: left;
+      line-height: 40px;
+      text-align: center;
+      position:relative;
+    }
+    a{
+      text-decoration: none;
+      color:#000; display:block; width:90px;
+    }
+    a:hover{
+      color:#FFF; background-color:#666;
+    }
+    ul li ul li{float: none;background-color:#eee;margin-top:3px; }
+    ul li ul{width: 90px;position: absolute;left: 0;top: 40px;display: none;}
+  </style>
+</head>
+<body>
+  <h1>Hello world! jQuery实现下拉菜单</h1>
+  <div id="menu">
+    <ul>
+      <li><a href="#">首页</a></li>
+      <li class="navbar"><a href="#">课程大厅</a>
+        <ul>
+          <li><a href="#">Javascript</a></li>
+          <li><a href="#">jQuery</a></li>
+        </ul>
+      </li>
+      <li class="navbar"><a href="#">学习中心</a>
+        <ul>
+          <li><a href="#">视频学习</a></li>
+          <li><a href="#">案例学习</a></li>
+          <li><a href="#">交流平台</a></li>
+        </ul>
+      </li>
+      <li><a href="#">经典案例</a></li>
+      <li><a href="#">关于我们</a></li>
+    </ul>
+  </div>
+  <script src="js/jquery-2.2.3.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      $(".navbar").mouseover(function(){
+        $(this).children("ul").show();
+        console.log(this);
+      });
+      $(".navbar").mouseout(function(){
+        $(this).children("ul").hide();
+      });
+    })
+  </script>
+</body>
+</html>

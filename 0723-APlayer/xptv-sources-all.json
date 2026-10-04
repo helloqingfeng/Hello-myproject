@@ -1,0 +1,125 @@
+{
+  "sites": [
+    {
+      "key": "libvio",
+      "name": "Libvio",
+      "type": 3,
+      "api": "csp_libvio",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/libvio.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "freeok",
+      "name": "FreeOK",
+      "type": 3,
+      "api": "csp_freeok",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/freeok.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "xlys02",
+      "name": "雪落影视",
+      "type": 3,
+      "api": "csp_xlys02",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/xlys02.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "dbku",
+      "name": "独播库",
+      "type": 3,
+      "api": "csp_dbku",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/dbku.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "zip0",
+      "name": "ZIP0 影视",
+      "type": 3,
+      "api": "csp_zip0",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/zip0.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "kxyy",
+      "name": "开心影院",
+      "type": 3,
+      "api": "csp_kxyy",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/kxyy.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "dpw66",
+      "name": "66大片网",
+      "type": 3,
+      "api": "csp_dpw66",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/dpw66.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "appmovie",
+      "name": "APP影院",
+      "type": 3,
+      "api": "csp_appmovie",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/appmovie.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "hstream",
+      "name": "HStream",
+      "type": 3,
+      "api": "csp_hstream",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/hstream.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "koreanbj",
+      "name": "Korean BJ Live",
+      "type": 3,
+      "api": "csp_koreanbj",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/koreanbj.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    },
+    {
+      "key": "m103",
+      "name": "103资源站",
+      "type": 3,
+      "api": "csp_m103",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/m103.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    }
+  ]
+}
