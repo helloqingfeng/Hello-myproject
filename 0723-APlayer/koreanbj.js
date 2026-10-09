@@ -3,7 +3,7 @@ const cheerio = createCheerio()
 const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1'
 
 let appConfig = {
-    ver: 20261002,
+    ver: 20261009,
     title: 'Korean BJ Live',
     site: 'https://koreanbj.live',
     tabs: [
@@ -23,6 +23,31 @@ function fullUrl(url) {
     if (!url) return ''
     if (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) return url
     return appConfig.site + (url.indexOf('/') === 0 ? url : '/' + url)
+}
+
+function rot13(str) {
+    return (str || '').replace(/[a-zA-Z]/g, function(c) {
+        return String.fromCharCode(
+            (c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+        )
+    })
+}
+
+function decodeVoe(rawStr) {
+    try {
+        let s = rot13(rawStr)
+        s = s.replace(/@\$|\^\^|~@|%\?|\*~|!!|#&/g, '')
+        const b1 = atob(s)
+        let shifted = ''
+        for (let i = 0; i < b1.length; i++) {
+            shifted += String.fromCharCode(b1.charCodeAt(i) - 3)
+        }
+        const reversed = shifted.split('').reverse().join('')
+        const jsonStr = atob(reversed)
+        return JSON.parse(jsonStr)
+    } catch (e) {
+        return null
+    }
 }
 
 function parseCards(data) {
@@ -117,53 +142,86 @@ async function getTracks(ext) {
             },
         })
 
-        const $ = cheerio.load(detailHtml)
-        let iframeSrc = $('iframe[src*="/embed/"]').first().attr('src') || $('iframe').first().attr('src') || ''
+        const htmlStr = String(detailHtml)
 
-        if (iframeSrc) {
-            iframeSrc = fullUrl(iframeSrc)
+        // 1. 从事件脚本或 DOM 中提取真实的视频嵌入页地址 (支持多种 pattern)
+        const m1 = htmlStr.match(/iframe\.setAttribute\(['"]src['"],\s*['"]([^'"]+)['"]\)/i)
+        const m2 = htmlStr.match(/<iframe[^>]+src=["']([^"']+)["']/i)
+        const m3 = htmlStr.match(/src=["'](https?:\/\/[^"']+\/(?:e|embed)\/[^"']+)["']/i)
+        const m4 = htmlStr.match(/https?:\/\/[^\s"'<>]+\/(?:e|embed)\/[a-zA-Z0-9_-]+/gi)
 
-            const { data: iframeHtml } = await $fetch.get(iframeSrc, {
-                headers: {
-                    'User-Agent': UA,
-                    Referer: targetUrl,
-                },
-            })
-
-            const htmlStr = String(iframeHtml)
-            const fileMatch = htmlStr.match(/file:\s*["']([^"']+)["']/)
-            if (fileMatch) {
-                let streamUrl = fileMatch[1].replace(/\\\//g, '/')
-                tracks.push({
-                    name: '高清播放',
-                    pan: '',
-                    ext: { url: streamUrl },
-                })
-            } else {
-                const mediaMatch = htmlStr.match(/https?:\/\/[^\s"'<>]+\.(?:txt|m3u8|mp4)[^\s"'<>]*/g)
-                if (mediaMatch && mediaMatch.length > 0) {
-                    const unique = Array.from(new Set(mediaMatch))
-                    unique.forEach((mUrl, i) => {
-                        tracks.push({
-                            name: `线路 ${i + 1}`,
-                            pan: '',
-                            ext: { url: mUrl.replace(/\\\//g, '/') },
-                        })
-                    })
-                }
-            }
+        let embedUrl = m1?.[1] || m2?.[1] || m3?.[1] || m4?.[0] || ''
+        if (embedUrl && !embedUrl.startsWith('http')) {
+            embedUrl = fullUrl(embedUrl)
         }
 
-        // 回退: 详情页直接提取
+        if (embedUrl) {
+            try {
+                const { data: iframeHtml } = await $fetch.get(embedUrl, {
+                    headers: {
+                        'User-Agent': UA,
+                        Referer: targetUrl,
+                    },
+                })
+
+                const ifrStr = String(iframeHtml)
+
+                // 2. 检查并解密 VOE (io12379storege/voe.sx) 加密数据包
+                const jsonMatch = ifrStr.match(/<script\s+type=["']application\/json["']>([\s\S]*?)<\/script>/i)
+                if (jsonMatch) {
+                    try {
+                        const payloadArray = JSON.parse(jsonMatch[1])
+                        const payloadStr = Array.isArray(payloadArray) ? payloadArray[0] : payloadArray
+                        const decoded = decodeVoe(payloadStr)
+                        if (decoded) {
+                            if (decoded.source && decoded.source.includes('.m3u8')) {
+                                tracks.push({
+                                    name: 'HLS 超清原画',
+                                    pan: '',
+                                    ext: { url: decoded.source },
+                                })
+                            }
+                            if (decoded.direct_access_url && (decoded.direct_access_url.includes('.mp4') || decoded.direct_access_url.includes('.m3u8'))) {
+                                tracks.push({
+                                    name: 'MP4 极速直链',
+                                    pan: '',
+                                    ext: { url: decoded.direct_access_url },
+                                })
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                // 3. 嵌入页常规直接提取 (过滤测试视频和预告片)
+                if (!tracks.length) {
+                    const fileMatch = ifrStr.match(/file:\s*["']([^"']+)["']/)
+                    if (fileMatch) {
+                        let streamUrl = fileMatch[1].replace(/\\\//g, '/')
+                        if (!streamUrl.includes('bigbuckbunny') && !streamUrl.includes('trailers')) {
+                            tracks.push({
+                                name: '高清播放',
+                                pan: '',
+                                ext: { url: streamUrl },
+                            })
+                        }
+                    }
+                }
+            } catch (err) {}
+        }
+
+        // 4. 详情页兜底提取 (严格过滤 .webm 和 trailers 广告片段)
         if (!tracks.length) {
-            const directMatch = String(detailHtml).match(/https?:\/\/[^\s"'<>]+\.(?:m3u8|mp4|webm)[^\s"'<>]*/g)
+            const directMatch = htmlStr.match(/https?:\/\/[^\s"'<>]+\.(?:m3u8|mp4)[^\s"'<>]*/g)
             if (directMatch && directMatch.length > 0) {
-                directMatch.forEach((mUrl, i) => {
-                    tracks.push({
-                        name: `播放源 ${i + 1}`,
-                        pan: '',
-                        ext: { url: mUrl },
-                    })
+                const unique = Array.from(new Set(directMatch))
+                unique.forEach((mUrl, i) => {
+                    if (!mUrl.includes('trailers') && !mUrl.includes('bigbuckbunny') && !mUrl.endsWith('.webm')) {
+                        tracks.push({
+                            name: `播放源 ${i + 1}`,
+                            pan: '',
+                            ext: { url: mUrl },
+                        })
+                    }
                 })
             }
         }
