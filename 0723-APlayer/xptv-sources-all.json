@@ -131,6 +131,17 @@
       "quickSearch": 1,
       "filterable": 0,
       "changeable": 0
+    },
+    {
+      "key": "alipzn",
+      "name": "泥鳅影院",
+      "type": 3,
+      "api": "csp_alipzn",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/alipzn.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
     }
   ]
 }
