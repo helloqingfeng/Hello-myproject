@@ -7,50 +7,49 @@ const SITE = 'https://zip0.com'
 const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
 const cheerio = createCheerio()
 
-/**
- * ① 新版 XPTV 强制检查入口：必须返回 api 字段
- */
+function argsify(args) {
+  if (typeof args === 'string') {
+    try {
+      return JSON.parse(args)
+    } catch (e) {
+      return {}
+    }
+  }
+  return args || {}
+}
+
 async function getLocalInfo() {
   return jsonify({ api: SITE })
 }
 
-/**
- * ② 配置：显示名称 + 分类 tabs
- */
 function getConfig() {
   const appConfig = {
-    author: 'Antigravity',
+    ver: 20261022,
     title: 'ZIP0 影视',
+    site: SITE,
     tabs: [
-      { title: '电影', typeurl: '/api/videos/search?query=电影' },
-      { title: '电视剧', typeurl: '/api/videos/search?query=电视剧' },
-      { title: '动漫', typeurl: '/api/videos/search?query=动漫' },
-      { title: '综艺', typeurl: '/api/videos/search?query=综艺' },
-      { title: '国产剧', typeurl: '/api/videos/search?query=国产剧' },
-      { title: '美剧', typeurl: '/api/videos/search?query=美剧' },
-      { title: '日韩剧', typeurl: '/api/videos/search?query=韩剧' },
-      { title: '短剧', typeurl: '/api/videos/search?query=短剧' },
-      { title: '动作片', typeurl: '/api/videos/search?query=动作' },
-      { title: '科幻片', typeurl: '/api/videos/search?query=科幻' },
+      { name: '电影', ext: { query: '电影' }, ui: 1 },
+      { name: '电视剧', ext: { query: '电视剧' }, ui: 1 },
+      { name: '动漫', ext: { query: '动漫' }, ui: 1 },
+      { name: '综艺', ext: { query: '综艺' }, ui: 1 },
+      { name: '国产剧', ext: { query: '国产剧' }, ui: 1 },
+      { name: '美剧', ext: { query: '美剧' }, ui: 1 },
+      { name: '日韩剧', ext: { query: '韩剧' }, ui: 1 },
+      { name: '短剧', ext: { query: '短剧' }, ui: 1 },
+      { name: '动作片', ext: { query: '动作' }, ui: 1 },
+      { name: '科幻片', ext: { query: '科幻' }, ui: 1 },
     ],
   }
   return jsonify(appConfig)
 }
 
-/**
- * ③ 列表：从 ext 取分类参数与页码
- */
 async function getCards(ext) {
   try {
-    let { page = 1, typeurl = '/api/videos/search?query=电影' } = ext || {}
-    let url = ''
-    if (typeurl.includes('?')) {
-      url = `${SITE}${typeurl}&page=${page}&limit=20`
-    } else {
-      url = `${SITE}${typeurl}?page=${page}&limit=20`
-    }
+    ext = argsify(ext)
+    let { page = 1, query = '电影' } = ext
+    let url = `${SITE}/api/videos/search?query=${encodeURIComponent(query)}&page=${page}&limit=20`
 
-    const { data } = await $fetch.get(url, {
+    const res = await $fetch.get(url, {
       headers: {
         'User-Agent': UA,
         'Referer': SITE,
@@ -58,7 +57,8 @@ async function getCards(ext) {
       },
     })
 
-    const json = typeof data === 'string' ? JSON.parse(data) : data
+    const raw = res.data !== undefined ? res.data : (typeof res.text === 'function' ? res.text() : res)
+    const json = typeof raw === 'string' ? JSON.parse(raw) : raw
     const list = []
 
     if (json && Array.isArray(json.data)) {
@@ -72,6 +72,11 @@ async function getCards(ext) {
           vod_name: item.title || '',
           vod_pic: item.image || item.poster || '',
           vod_remarks: item.remarks || `${item.year || ''} ${item.category || ''}`.trim() || '',
+          ext: {
+            url: playUrl,
+            title: item.title,
+            pic: item.image || item.poster
+          }
         })
       }
     }
@@ -82,31 +87,31 @@ async function getCards(ext) {
   }
 }
 
-/**
- * ④ 线路 / 选集：解析详情页与播放列表
- */
 async function getTracks(ext) {
   try {
+    ext = argsify(ext)
     const targetUrl = ext.url || ext.vod_id || ext.id || ''
-    if (!targetUrl) return jsonify([])
+    if (!targetUrl) return jsonify({ list: [] })
 
-    const { data } = await $fetch.get(targetUrl, {
+    const res = await $fetch.get(targetUrl, {
       headers: {
         'User-Agent': UA,
         'Referer': SITE,
       },
     })
 
-    const html = typeof data === 'string' ? data : JSON.stringify(data)
+    const raw = res.data !== undefined ? res.data : (typeof res.text === 'function' ? res.text() : res)
+    const html = typeof raw === 'string' ? raw : JSON.stringify(raw)
     const tracks = []
 
-    // 优先从 SSR 序列化数据提取具体集数和链接
+    // 优先从 SSR 序列化数据提取具体集数和链接 (episodes:[{name:"...",url:"..."}])
     const epRegex = /\{name:"([^"]+)",url:"([^"]+)"\}/g
     let match
     while ((match = epRegex.exec(html)) !== null) {
       tracks.push({
         name: match[1],
-        url: match[2],
+        pan: '',
+        ext: { url: match[2] }
       })
     }
 
@@ -118,83 +123,83 @@ async function getTracks(ext) {
       uniqueMedia.forEach((mediaUrl, idx) => {
         tracks.push({
           name: `播放源 ${idx + 1}`,
-          url: mediaUrl,
+          pan: '',
+          ext: { url: mediaUrl }
         })
       })
     }
 
-    // 再次回退：若仍无直链，直接返回详情页作为单线路
     if (tracks.length === 0) {
       tracks.push({
         name: '默认线路',
-        url: targetUrl,
+        pan: '',
+        ext: { url: targetUrl }
       })
     }
 
-    return jsonify(tracks)
+    return jsonify({
+      list: [{
+        title: 'ZIP0 极速播放',
+        tracks: tracks
+      }]
+    })
   } catch (error) {
-    return jsonify([])
+    return jsonify({ list: [] })
   }
 }
 
-/**
- * ⑤ 播放：提取最终直链
- */
 async function getPlayinfo(ext) {
   try {
-    const { url } = ext || {}
-    if (!url) return jsonify({ url: '' })
+    ext = argsify(ext)
+    const url = ext.url || ''
+    if (!url) return jsonify({ urls: [] })
 
     // 如果已经是 m3u8 / mp4 直链，直接返回
     if (url.includes('.m3u8') || url.includes('.mp4')) {
       return jsonify({
-        url: url,
-        header: {
+        urls: [url],
+        headers: [{
           'User-Agent': UA,
           'Referer': SITE,
-        },
+        }],
       })
     }
 
     // 若传入的是播放页地址，二次抓取
-    const { data } = await $fetch.get(url, {
+    const res = await $fetch.get(url, {
       headers: {
         'User-Agent': UA,
         'Referer': SITE,
       },
     })
 
-    const html = typeof data === 'string' ? data : JSON.stringify(data)
-    const reg = /https?:\/\/[^\s'"<>]+?\.(?:m3u8|mp4)[^\s'"<>]*/g
-    const match = html.match(reg)
-
-    if (match && match.length > 0) {
+    const raw = res.data !== undefined ? res.data : (typeof res.text === 'function' ? res.text() : res)
+    const html = typeof raw === 'string' ? raw : JSON.stringify(raw)
+    const m3u8Match = html.match(/https?:\/\/[^\s"'<>]+\.(?:m3u8|mp4)[^\s"'<>]*/)
+    if (m3u8Match) {
       return jsonify({
-        url: match[0],
-        header: {
+        urls: [m3u8Match[0]],
+        headers: [{
           'User-Agent': UA,
-          'Referer': url,
-        },
+          'Referer': SITE,
+        }],
       })
     }
 
-    return jsonify({ url: url })
+    return jsonify({ urls: [url] })
   } catch (error) {
-    return jsonify({ url: '' })
+    return jsonify({ urls: [] })
   }
 }
 
-/**
- * ⑥ 搜索：按关键词搜索视频
- */
 async function search(ext) {
   try {
-    const { wd, text, key, page = 1 } = ext || {}
-    const keyword = text || wd || key || ext.keyword || ''
+    ext = argsify(ext)
+    const keyword = ext.text || ext.keyword || ext.wd || ''
     if (!keyword) return jsonify({ list: [] })
 
-    const searchUrl = `${SITE}/api/videos/search?query=${encodeURIComponent(keyword)}&page=${page}&limit=20`
-    const { data } = await $fetch.get(searchUrl, {
+    const url = `${SITE}/api/videos/search?query=${encodeURIComponent(keyword)}&page=1&limit=20`
+    const res = await $fetch.get(url, {
       headers: {
         'User-Agent': UA,
         'Referer': SITE,
@@ -202,7 +207,8 @@ async function search(ext) {
       },
     })
 
-    const json = typeof data === 'string' ? JSON.parse(data) : data
+    const raw = res.data !== undefined ? res.data : (typeof res.text === 'function' ? res.text() : res)
+    const json = typeof raw === 'string' ? JSON.parse(raw) : raw
     const list = []
 
     if (json && Array.isArray(json.data)) {
@@ -216,6 +222,11 @@ async function search(ext) {
           vod_name: item.title || '',
           vod_pic: item.image || item.poster || '',
           vod_remarks: item.remarks || `${item.year || ''} ${item.category || ''}`.trim() || '',
+          ext: {
+            url: playUrl,
+            title: item.title,
+            pic: item.image || item.poster
+          }
         })
       }
     }

@@ -226,7 +226,7 @@ async function getTracks(ext) {
             }
         }
     } catch (e) {
-        $print('getTracks failed: ' + e)
+        console.log('getTracks failed: ' + e)
     }
 
     return jsonify({

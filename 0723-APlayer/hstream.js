@@ -108,13 +108,14 @@ async function getTracks(ext) {
         const html = typeof res.data === 'string' ? res.data : JSON.stringify(res.data)
         const $ = cheerio.load(html)
 
-        const eId = $('#e_id').val()
-        const token = $('input[name="_token"]').val()
+        const eId = $('#e_id').attr('value') || $('#e_id').val()
+        const token = $('input[name="_token"]').first().attr('value') || $('input[name="_token"]').val()
 
         let cookies = ''
-        if (res.headers && res.headers['set-cookie']) {
-            const sc = res.headers['set-cookie']
-            cookies = Array.isArray(sc) ? sc.join('; ') : String(sc)
+        if (res.headers) {
+            const sc = res.headers['set-cookie'] || res.headers['Set-Cookie'] || ''
+            const raw = Array.isArray(sc) ? sc : String(sc).split(/,(?=[^;]+=[^;]+)/)
+            cookies = raw.map(c => c.split(';')[0].trim()).filter(Boolean).join('; ')
         }
 
         if (eId && token) {
@@ -171,7 +172,7 @@ async function getTracks(ext) {
                     })
                 }
             } catch (err) {
-                $print('player/api post failed: ' + err)
+                console.log('player/api post failed: ' + err)
             }
         }
 
@@ -189,7 +190,7 @@ async function getTracks(ext) {
             })
         }
     } catch (e) {
-        $print('getTracks failed: ' + e)
+        console.log('getTracks failed: ' + e)
     }
 
     return jsonify({
@@ -221,12 +222,13 @@ async function search(ext) {
 
         const html = typeof getRes.data === 'string' ? getRes.data : JSON.stringify(getRes.data)
         const $ = cheerio.load(html)
-        const token = $('input[name="_token"]').val() || $('script[data-csrf]').attr('data-csrf')
+        const token = $('input[name="_token"]').first().attr('value') || $('input[name="_token"]').val() || $('script[data-csrf]').attr('data-csrf')
 
         let cookies = ''
-        if (getRes.headers && getRes.headers['set-cookie']) {
-            const sc = getRes.headers['set-cookie']
-            cookies = Array.isArray(sc) ? sc.join('; ') : String(sc)
+        if (getRes.headers) {
+            const sc = getRes.headers['set-cookie'] || getRes.headers['Set-Cookie'] || ''
+            const raw = Array.isArray(sc) ? sc : String(sc).split(/,(?=[^;]+=[^;]+)/)
+            cookies = raw.map(c => c.split(';')[0].trim()).filter(Boolean).join('; ')
         }
 
         let snapshotStr = ''
