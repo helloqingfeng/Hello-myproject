@@ -1,5 +1,5 @@
 {
-  "spider": "https://fastly.jsdelivr.net/gh/q215613907/Jar@main/custom_spider.jar;md5;bb72a91a91e5c26b9a89d71c10712345",
+  "spider": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/custom_spider.jar;md5;efce6ba8d62a1bb6097a382de5d93630",
   "wallpaper": "https://api.likepoems.com/img/nature",
   "sites": [
     {
