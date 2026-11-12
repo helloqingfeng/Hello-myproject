@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>0602——bing search</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type="text/css">
+		body{background-color: #333;margin: 0;padding: 0}
+		.bg-div{
+			position: relative;
+			text-align:center;
+			margin: 0 auto;
+			height: 768px;
+			width: 1366px;
+			background-image: url(http://img.mukewang.com/52da5e7d0001c0f813660768.jpg);
+		}
+		.logo{
+			float:left;
+			background: url(http://img.mukewang.com/52da5e530001eea901070053.jpg) no-repeat;
+			margin: -4px 18px 0 0;
+			height: 53px;
+			width: 107px;
+		}
+		.search-warp{
+			float:left;
+			background-color:#fff;
+			width:415px;
+			padding:0;
+			margin: 0;
+		}
+		.search-input{
+			float:left;
+			border: 0;
+			font-size: 100%;
+			width: 378px;
+			outline: none;/**/
+			height:40px;
+			line-height: 35px;
+		}
+		.search-submit{
+			float:left;
+			cursor:default;
+			height: 42px;
+			width: 37px;
+			background: #0c8484 url(https://www.bing.com/s/a/hpc18.png) no-repeat;
+			border: 0px solid #0c8484;
+			background-position: -169px -58px;
+			overflow: hidden;
+			vertical-align: center;
+		}
+		.search-box{
+			position: absolute;
+			top:38%;
+			left:30%;
+			height: 40px;
+					}
+		#suggest{
+			width: 376px;
+			background-color: #fff;
+			border:1px solid #ccc;
+		}
+		#suggest ul{
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		#suggest ul li{
+			font-size:20px;
+			height: 38px;
+			line-height: 38px;
+			cursor: pointer;
+		}
+		#suggest ul li:hover{
+			background-color: gray;
+			text-decoration: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="bg-div">
+		<div class="search-box">
+			<div class="logo"></div>
+			<form action="https://www.bing.com/search" target="_blank" method="get" class="search-warp">
+				<input class="search-input" type="text" name="q">
+				<input class="search-submit" type="submit" value=""/>
+			</form>
+		</div>
+	</div>
+	<div id="suggest" style="display: none;">
+		<ul id="search-result">
+			<li>搜索结果001</li>
+			<li>搜索结果001</li>
+		</ul>
+	</div>
+	<script src="js/jquery-2.2.3.min.js"></script>
+	<script type="text/javascript">
+	$(".search-input").bind('keyup click',function(){
+		var serachText=$("#search-input").val();
+		$.get('http://api.bing.com/qsonhs.aspx?q='+serachText,function(d){
+			var d=d.AS.Result[0].Suggests;
+			var html='';
+			for (var i = 0; i < d.length; i++) {
+				html+='<li>'+d[i].Txt+'</li>';
+			}
+			$("#search-result").html(html);
+
+			$("#suggest").show()
+		                      .css({
+			position:'absolute',
+			top:$(".search-input").offset().top+$(".search-input").height()+2,
+			left:$(".search-input").offset().left
+		});
+
+		},'json');
+	})
+
+	</script>
+</body>
+</html>

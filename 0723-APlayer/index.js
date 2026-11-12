@@ -1,0 +1,215 @@
+/**
+ * TVS / PeekPro / CatVod 兼容全源合集订阅 (12站)
+ * 支持: .js 订阅、index.js.md5 校验、index.js 目录自动读取
+ */
+
+const config = {
+  "wallpaper": "https://api.likepoems.com/img/nature",
+  "sites": [
+    {
+      "key": "libvio",
+      "name": "🎬 Libvio 影视",
+      "type": 3,
+      "api": "csp_libvio",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/libvio.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "dbku",
+      "name": "🎯 独播库",
+      "type": 3,
+      "api": "csp_dbku",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/dbku.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "zip0",
+      "name": "⚡ ZIP0 影视",
+      "type": 3,
+      "api": "csp_zip0",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/zip0.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "kxyy",
+      "name": "🍿 开心影院",
+      "type": 3,
+      "api": "csp_kxyy",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/kxyy.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "dpw66",
+      "name": "🎞️ 66大片网",
+      "type": 3,
+      "api": "csp_dpw66",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/dpw66.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "appmovie",
+      "name": "📱 APP影院",
+      "type": 3,
+      "api": "csp_appmovie",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/appmovie.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "hstream",
+      "name": "🔞 HStream",
+      "type": 3,
+      "api": "csp_hstream",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/hstream.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "koreanbj",
+      "name": "💃 Korean BJ Live",
+      "type": 3,
+      "api": "csp_koreanbj",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/koreanbj.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "m103",
+      "name": "📦 103资源站",
+      "type": 1,
+      "api": "https://www.103zy.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "kbjfree",
+      "name": "🎥 KBJFree 韩国主播",
+      "type": 3,
+      "api": "csp_kbjfree",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/kbjfree.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "alipzn",
+      "name": "🐟 泥鳅影院",
+      "type": 3,
+      "api": "csp_alipzn",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/alipzn.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "sexbjcam",
+      "name": "🔞 SexBJCam",
+      "type": 3,
+      "api": "csp_sexbjcam",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/sexbjcam.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    }
+  ],
+  "parses": [
+    {
+      "name": "聚合解析",
+      "type": 1,
+      "url": "https://jx.jsonplayer.com/player/?url="
+    },
+    {
+      "name": "嗅探解析",
+      "type": 0,
+      "url": "https://jx.m3u8.tv/jiexi/?url="
+    }
+  ],
+  "flags": [
+    "youku",
+    "qq",
+    "iqiyi",
+    "qiyi",
+    "letv",
+    "sohu",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "bilibili"
+  ],
+  "rules": [
+    {
+      "name": "广告过滤与分片",
+      "hosts": [
+        "v.qq.com",
+        "iqiyi.com",
+        "youku.com",
+        "mgtv.com"
+      ],
+      "regex": [
+        "#EXT-X-DISCONTINUITY\\r*\\n*#EXTINF:0.666667,[\\s\\S]*?#EXT-X-DISCONTINUITY"
+      ]
+    },
+    {
+      "name": "流媒体嗅探",
+      "hosts": [
+        "sexbjcam.com",
+        "embedorigin.cc",
+        "playerrecord.cfd",
+        "hstream.moe",
+        "koreanbj.club"
+      ],
+      "regex": [
+        "http.*?video.*?\\.m3u8",
+        "http.*?\\.mp4"
+      ]
+    }
+  ]
+};
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = config;
+  module.exports.default = config;
+  module.exports.config = config;
+  module.exports.sites = config.sites;
+}
+if (typeof exports !== 'undefined') {
+  exports.config = config;
+  exports.sites = config.sites;
+}
+if (typeof global !== 'undefined') {
+  global.config = config;
+  global.sites = config.sites;
+}
+if (typeof window !== 'undefined') {
+  window.config = config;
+  window.sites = config.sites;
+}
+function getConfig() {
+  return JSON.stringify(config);
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>index</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style type="text/css">
+    .header,
+    .footer{
+    	margin:0;
+    	padding: 0;
+    }
+    #imageId{
+    	width:80%;
+    }
+  </style>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    </head>
+    <body>
+      <nav class="navbar navbar-inverse">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">项目演示</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">首页<span class="sr-only">(current)</span></a></li>
+              <li><a href="#">标签一</a></li>
+              <li><a href="#">标签二</a></li>
+              <li><a href="#">标签一</a></li>
+              <li><a href="#">标签二</a></li>
+              <li><a href="#">标签一</a></li>
+              <li><a href="#">标签二</a></li>
+            </ul>    
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+
+      <header class="jumbotron">
+        <img src="img/hai000.jpg" class="image img-responsive center-block"  id="imageId" alt="图片一">
+        <p class="lead text-center">我试试你第一页</p>
+        <p class="text-center"><a class="btn btn-lg btn-success" role="button" id="next">下一张</a></p>
+        
+      </header>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+           <h2 class="lead">我是第一行</h2>
+           <p>本课时中将会使用 yo 来搭建一个 Gulp Sass Bootstrap 项目，并对项目工程进行逐一分析。从项目结构入手，对每个文件夹进行分析可以帮助学员了解项目的具体结构。学员学完本课时后将理清自己的项目思路。</p>
+         </div>
+         <div class="col-md-4">
+          <h2>我是第一行</h2>
+          <p>本课时中将会使用 yo 来搭建一个 Gulp Sass Bootstrap 项目，并对项目工程进行逐一分析。从项目结构入手，对每个文件夹进行分析可以帮助学员了解项目的具体结构。学员学完本课时后将理清自己的项目思路。</p>
+        </div>
+        <div class="col-md-4">
+          <h2>我是第一行</h2>
+          <p>本课时中将会使用 yo 来搭建一个 Gulp Sass Bootstrap 项目，并对项目工程进行逐一分析。从项目结构入手，对每个文件夹进行分析可以帮助学员了解项目的具体结构。学员学完本课时后将理清自己的项目思路。</p>
+        </div> 
+      </div>
+    </div>
+
+
+
+    <script src="js/jquery-2.2.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+    	var imageArray=new Array();
+    	var imageNum=1;
+    	imageArray=["img/hai001.jpg","img/hai002.jpg","img/hai003.jpg","img/hai004.jpg","img/hai005.jpg"]
+    	$("#next").click(function(){
+    		imageNum++;
+    		if(imageNum==5){
+    			imageNum=1;
+    		}
+    		switch(imageNum){
+    			case 1:
+    			$("#imageId").attr("src",imageArray[1]);
+    			break;
+    			case 2:
+    			$("#imageId").attr("src",imageArray[2]);
+    			break;
+    			case 3:
+    			$("#imageId").attr("src",imageArray[3]);
+    			break;
+    			case 4:
+    			$("#imageId").attr("src",imageArray[4]);
+    			break;
+    			case 5:
+    			$("#imageId").attr("src",imageArray[5]);
+    			break;
+
+    		}
+    	})
+    </script>
+  </body>
+  </html>

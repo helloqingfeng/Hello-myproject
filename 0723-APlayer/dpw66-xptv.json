@@ -1,0 +1,15 @@
+{
+  "sites": [
+    {
+      "key": "dpw66",
+      "name": "66大片网",
+      "type": 3,
+      "api": "csp_dpw66",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/dpw66.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 0
+    }
+  ]
+}
