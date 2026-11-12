@@ -1,0 +1,69 @@
+{
+  "spider": "https://fastly.jsdelivr.net/gh/q215613907/Jar@main/custom_spider.jar;md5;bb72a91a91e5c26b9a89d71c10712345",
+  "wallpaper": "https://api.likepoems.com/img/nature",
+  "sites": [
+    {
+      "key": "sexbjcam",
+      "name": "🔞 SexBJCam (Node/TVS)",
+      "type": 3,
+      "api": "csp_sexbjcam",
+      "ext": "https://raw.githubusercontent.com/helloqingfeng/Hello-myproject/gh-pages/0723-APlayer/sexbjcam.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0
+    },
+    {
+      "key": "sexbjcam_xbpq",
+      "name": "🔞 SexBJCam (XBPQ直连)",
+      "type": 3,
+      "api": "csp_XBPQ",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "主页url": "https://sexbjcam.com",
+        "分类url": "https://sexbjcam.com/category/{cateId}/page/{catePg}/[firstPage=https://sexbjcam.com/category/{cateId}/]",
+        "分类": "Korean BJ$korean-bj#Chinese Girl$chinese-gril",
+        "数组": "article.thumb-block",
+        "标题": "a[title]&&title",
+        "图片": "img&&data-src||img&&src",
+        "副标题": ".duration&&Text",
+        "链接": "a&&href",
+        "搜索url": "https://sexbjcam.com/?s={wd}",
+        "搜索模式": "1",
+        "搜索数组": "article.thumb-block",
+        "搜索标题": "a[title]&&title",
+        "搜索图片": "img&&data-src||img&&src",
+        "搜索副标题": ".duration&&Text",
+        "搜索链接": "a&&href"
+      }
+    }
+  ],
+  "parses": [
+    {
+      "name": "聚合解析",
+      "type": 1,
+      "url": "https://jx.jsonplayer.com/player/?url="
+    },
+    {
+      "name": "嗅探解析",
+      "type": 0,
+      "url": "https://jx.m3u8.tv/jiexi/?url="
+    }
+  ],
+  "rules": [
+    {
+      "name": "m3u8嗅探",
+      "hosts": [
+        "sexbjcam.com",
+        "embedorigin.cc",
+        "playerrecord.cfd"
+      ],
+      "regex": [
+        "http.*?video.*?\\.m3u8",
+        "http.*?\\.mp4"
+      ]
+    }
+  ]
+}
